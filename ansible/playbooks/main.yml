@@ -1,0 +1,16 @@
+---
+- hosts: all
+
+- name: Subcribe
+  import_playbook: subscribe.yml
+  when: deployment_type == 'openshift-enterprise'
+  
+- name: Requirements
+  import_playbook: requirements.yml
+  when: deployment_type == 'origin'
+
+- name: Openshift Installer
+  import_playbook: installer.yml
+
+- name: Docker storage
+  import_playbook: storage.yml

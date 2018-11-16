@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+
+    - name: docker-storage
+      copy:
+        content: |
+          DEVS=/dev/vdb
+          VG=docker-vg
+        dest: /etc/sysconfig/docker-storage-setup
+
+    - name: check docker-vg
+      command: vgs docker-vg
+      register: result
+      changed_when: false
+      failed_when: false
+    
+    - name: Docker storage setup
+      command: docker-storage-setup
+      when: result.rc != 0

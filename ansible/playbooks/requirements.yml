@@ -1,0 +1,33 @@
+---
+- hosts: all
+  become: yes
+
+  vars:
+    requirements:
+      - wget
+      - git
+      - net-tools
+      - bind-utils
+      - yum-utils
+      - iptables-services
+      - bridge-utils
+      - bash-completion
+      - kexec-tools
+      - sos
+      - psacct
+      - docker-1.13.1
+      - centos-release-openshift-origin
+
+  tasks:
+
+    - name: EPEL
+      yum:
+        name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+
+    - name: Requirements
+      yum:
+        name: "{{ requirements | join(',') }}"
+        state: present
+
+    - name: System upgrade
+      yum: name=* state=latest update_cache=yes
