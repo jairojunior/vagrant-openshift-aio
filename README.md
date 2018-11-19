@@ -8,19 +8,29 @@ After `vagrant up` you'll be able to access your OpenShift instance at: `https:/
 
 > **NOTE:** You can configure your inventory in `ansible/templates/all-in-one.ini` file.
 
+# Steps
+
+1. Set Environment Variables (Optional):
+
+```shell
+export OPENSHIFT_DEPLOYMENT_TYPE=openshift-enterprise
+export OPENSHIFT_RELEASE=v3.11
+export MACHINE_IP=10.10.10.10
+```
+
 For **openshift-enterprise**, a few additional steps are required:
 
-1. Build RHEL 7.5 image using packer:
+2. Build RHEL 7.5 image using packer:
 
-```
+```shell
 git clone https://github.com/jairojunior/packer-rhel
 cd packer-rhel
-Download rhel-server-7.5-x86_64-dvd.iso
+# Download rhel-server-7.5-x86_64-dvd.iso
 packer build x86_64-vagrant-ocp.qemu.json -var 'rhn_username=user' -var 'rhn_password=password' -var 'pool_id=abcdefgh'
 vagrant box add --name rhel-7.5-ocp rhel-7.5-ocp.box
 ```
 
-2. Set RHN Credentials:
+3. Set RHN Credentials:
 
 - Create `ansible/vars/credentials.yml` with `ansible-vault` and the following content:
 
@@ -32,6 +42,8 @@ pool_id: pool-id-with-ocp
 
 - Create `.vault` with your vault password.
 
+4. `vagrant up`
+
 ## Limitations
 
 - Only tested with libvirt.
@@ -39,8 +51,5 @@ pool_id: pool-id-with-ocp
 
 ## TODO
 
-- Package version for CentOS
-- CentOS testing repositories with latest OKD versions.
-- Repositories by version for RHEL
 - VirtualBox for OSX users.
-- Automate image build.
+- Fully automate image build.

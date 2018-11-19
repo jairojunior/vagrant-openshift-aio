@@ -3,11 +3,12 @@
   become: yes
 
   vars:
+    repository_version: "{{ release | replace('v', '') }}"
+
     enabled_repos:
       - rhel-7-server-rpms
       - rhel-7-server-extras-rpms
-      - rhel-7-server-ose-3.11-rpms
-      - rhel-7-server-ansible-2.6-rpms
+      - "rhel-7-server-ose-{{ repository_version }}-rpms"
 
   tasks:
 
@@ -30,4 +31,16 @@
       rhsm_repository:
         name: "{{ item }}"
         state: enabled
-      with_items: "{{ enabled_repos }}" 
+      with_items: "{{ enabled_repos }}"
+
+    - name: Ansible repository 2.6
+      rhsm_repository:
+        name: rhel-7-server-ansible-2.6-rpms
+        state: enabled
+      when: repository_version == '3.11'
+
+    - name: Ansible repository 2.4
+      rhsm_repository:
+        name: rhel-7-server-ansible-2.4-rpms
+        state: enabled
+      when: repository_version == '3.10' or repository_version == '3.9'
