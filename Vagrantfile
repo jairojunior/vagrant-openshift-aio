@@ -1,8 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-OPENSHIFT_DEPLOYMENT_TYPE = ENV['OPENSHIFT_DEPLOYMENT_TYPE'] || 'openshift-enterprise'
-OPENSHIFT_RELEASE = ENV['OPENSHIFT_RELEASE'] || 'v3.11'
+OPENSHIFT_DEPLOYMENT_TYPE = ENV['OPENSHIFT_DEPLOYMENT_TYPE'] || 'origin'
+OPENSHIFT_RELEASE = ENV['OPENSHIFT_RELEASE'] || 'v3.10'
 MACHINE_IP='10.20.30.40'
 
 Vagrant.configure("2") do |config|
@@ -39,12 +39,7 @@ Vagrant.configure("2") do |config|
     hostname = "master-ocp"
     config.vm.hostname = hostname
 
-    config.trigger.before :destroy do |trigger|
-      trigger.warn = "Unsubscribing host..."
-      trigger.run_remote = {
-        inline: "subscription-manager unsubscribe --all && subscription-manager unregister && subscription-manager clean"
-      }
-    end
+
   else
     config.vm.box = "centos/7"
     hostname = "master-okd"
